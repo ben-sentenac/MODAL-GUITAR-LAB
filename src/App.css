@@ -77,8 +77,9 @@
 
 
 
-.is-selected:after,
-.in-scale::after {
+.is-selected::after,
+.in-scale::after,
+.comparison-only::after {
     content: attr(data-note);
     position: absolute;
     left: 50%;
@@ -103,20 +104,23 @@
 .in-scale {
     background-color:var(--in-scale-fret-color);
 }
-.in-scale:after {
+.in-scale::after {
     z-index: 1;
     background-color: var(--in-scale-color);
 }
 
-.is-characteristic:after {
+.is-characteristic::after {
     background-color: var(--characteristic-color);
 }
 
-.is-tonic:after {
+.is-tonic::after {
     background-color: var(--tonic-color);
 }
+.comparison-only::after {
+    background-color: #67c7f0;
+}
 
-.is-selected:after {
+.is-selected::after {
     z-index: 20;
     background-color: var(--selected-color);
 }

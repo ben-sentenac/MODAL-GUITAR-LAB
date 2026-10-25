@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { getFullNoteName, getMidiNote } from "./music/notes";
-import
-{
+import {
     CHROMATIC_SCALE,
     getIntervalLabel,
     getTonicName,
@@ -9,7 +8,8 @@ import
     isCharacteristicInterval,
     SCALES,
     type NoteName,
-    type ScaleName
+    type ScaleName,
+    getScaleComparisonStatus
 } from "./music/scales";
 
 type GuitarString = {
@@ -43,6 +43,7 @@ function GuitarNeck() {
     const [tonic, setTonic] = useState(4);
     const [scaleName, setScaleName] = useState<ScaleName>("minor");
     const [displayMode, setDisplayMode] = useState<"notes" | "intervals">("notes");
+    const [comparisonScale, setComparisonScale] = useState<ScaleName | null>(null);
 
     const guitarStrings: GuitarString[] = [
         {
@@ -99,6 +100,20 @@ function GuitarNeck() {
         }
     }
 
+    const handleComparisonScaleChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedComparison = target.value === '' ? null : target.value;
+        if (
+            selectedComparison === 'major'
+            || selectedComparison === 'minor'
+            || selectedComparison === 'dorian'
+            || selectedComparison === 'phrygian'
+            || selectedComparison === null
+        ) {
+            setComparisonScale(selectedComparison);
+        }
+
+    }
+
     const fretNumbers = Array.from({ length: 13 }, (_, i) => i);
 
     const selected = guitarStrings.find((string) => string.pos === selectedPosition?.stringPos);
@@ -151,17 +166,37 @@ function GuitarNeck() {
                     </select>
                 </div>
                 <div className="display-mode-option">
-                    <label className="option-label" htmlFor="mode-display">
+                    <label className="option-label" htmlFor="display-mode-select">
                         Affichage
                     </label>
                     <select
                         name="display"
-                        id="mode-display"
+                        id="display-mode-select"
                         value={displayMode}
                         onChange={handleDisplayModeChange}
                     >
                         <option value="notes">Notes</option>
                         <option value="intervals">Intervalles</option>
+                    </select>
+                </div>
+                <div className="comparison-mode-option">
+                    <label className="option-label" htmlFor="comparison-select">
+                        Comparer avec:
+                    </label>
+                    <select
+                        name="comparison"
+                        id="comparison-select"
+                        value={comparisonScale ?? ''}
+                        onChange={handleComparisonScaleChange}
+                    >
+                        <option value={''}>Aucune Comparaison</option>
+                        {
+                            Object.keys(SCALES).map((scale) => {
+                                return (
+                                    <option key={scale} value={scale}>{scale}</option>
+                                )
+                            })
+                        }
                     </select>
                 </div>
             </div>
@@ -190,9 +225,12 @@ function GuitarNeck() {
                                         const midiNote = getMidiNote(string.openMidi, fret);
                                         const label = displayMode === 'notes' ? getFullNoteName(midiNote) : getIntervalLabel(tonic, midiNote);
                                         const isInScale = isNoteInScale(midiNote, tonic, scaleName);
-                                        const isCharacteristic = isCharacteristicInterval(tonic,midiNote,scaleName);
-                                        const note = isSelected || isInScale ? label : "";
+                                        const isCharacteristic = isCharacteristicInterval(tonic, midiNote, scaleName);
+                                        const comparisonStatus = comparisonScale ? getScaleComparisonStatus(tonic, midiNote, scaleName, comparisonScale) : null;
+                                        const note = isSelected || isInScale || comparisonStatus === 'comparison-only' ? label : "";
                                         const isTonic = midiNote % 12 === tonic % 12;
+
+                                        console.log(comparisonStatus);
                                         return (
                                             <div key={fret}
                                                 className={`fret-cell
@@ -200,6 +238,7 @@ function GuitarNeck() {
                                                 ${isInScale ? 'in-scale' : ''}
                                                 ${isTonic ? 'is-tonic' : ''}
                                                 ${isCharacteristic ? 'is-characteristic' : ''}
+                                                ${comparisonStatus === 'comparison-only' ? 'comparison-only' : ''}
                                                 `}
                                                 onClick={() => handleFretClick(string.pos, fret)}
                                                 data-note={note}
@@ -221,6 +260,7 @@ function GuitarNeck() {
             </div>
             {
                 selectedPosition && selected ? buildOutput(selectedPosition, selected, tonic, scaleName) : <span>Aucune note séléctionée</span>
+
             }
         </>
     )
