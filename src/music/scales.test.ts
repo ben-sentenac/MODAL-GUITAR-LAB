@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isCharacteristicInterval } from "./scales";
+import { getScaleComparisonStatus, isCharacteristicInterval } from "./scales";
 
 
 describe('isCharacteristicInterval', () => {
@@ -24,4 +24,20 @@ describe('isCharacteristicInterval', () => {
     it('must find the major 7 of the major mode', () => {
         expect(isCharacteristicInterval(40, 51, "major")).toBe(true);
     })
+});
+
+describe("getScaleComparisonStatus", () => {
+    it("must return common", () => {
+        expect(getScaleComparisonStatus(40, 52, "minor", "dorian")).toBe("common");
+    });
+    it("must return primary-only", () => {
+        expect(getScaleComparisonStatus(40, 48, "minor", "dorian")).toBe("main-only");
+    });
+    it("must return reference-only", () => {
+        expect(getScaleComparisonStatus(40, 49, "minor", "dorian")).toBe("comparison-only");
+    });
+    it("must return outside", () => {
+        expect(getScaleComparisonStatus(40, 53, "minor", "dorian")).toBe("outside");
+    });
+
 });

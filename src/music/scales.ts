@@ -33,6 +33,12 @@ export type ScaleName = keyof typeof SCALES;
 
 export type ScaleInterval = (typeof INTERVALS)[number];
 
+export type ScaleComparisonStatus =
+    | "common"
+    | "main-only"
+    | "comparison-only"
+    | "outside";
+
 
 export const CHARACTERISTIC_INTERVALS:Partial<Record<ScaleName,number[]>> = {
     "dorian":[9],
@@ -71,4 +77,22 @@ export function getIntervalLabel(tonic:number,noteMidi:number):ScaleInterval {
 export function isCharacteristicInterval(tonicMidi:number,noteMidi:number,scaleName:ScaleName):boolean {
     const result = CHARACTERISTIC_INTERVALS[scaleName];
     return result?.includes(getIntervalSemitones(tonicMidi,noteMidi)) ?? false
+}
+
+export function getScaleComparisonStatus(
+    tonicMidi:number,
+    noteMidi:number,
+    mainScale:ScaleName,
+    comparisonScale: ScaleName
+): ScaleComparisonStatus {
+    checkMidiRange(noteMidi);
+    checkMidiRange(tonicMidi);
+    const main = isNoteInScale(noteMidi,tonicMidi,mainScale);
+    const comparison = isNoteInScale(noteMidi,tonicMidi,comparisonScale);
+
+    if(!comparison && !main) return "outside";
+    if(comparison && !main) return "comparison-only";
+    if(!comparison && main) return "main-only";
+    return "common";
+
 }
