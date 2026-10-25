@@ -11,6 +11,7 @@ import {
     type ScaleName,
     getScaleComparisonStatus
 } from "./music/scales";
+import { FretBoardLegend } from "./FretboardLegend";
 
 type GuitarString = {
     pos: 1 | 2 | 3 | 4 | 5 | 6;
@@ -199,6 +200,7 @@ function GuitarNeck() {
                         }
                     </select>
                 </div>
+                <FretBoardLegend isComparing={comparisonScale !== null}/>
             </div>
             <div className="g-neck-container">
                 {/* display fret numbers*/}
@@ -237,8 +239,9 @@ function GuitarNeck() {
                                                 ${isSelected ? 'is-selected' : ''}
                                                 ${isInScale ? 'in-scale' : ''}
                                                 ${isTonic ? 'is-tonic' : ''}
-                                                ${isCharacteristic ? 'is-characteristic' : ''}
+                                                ${isCharacteristic && comparisonScale === null ? 'is-characteristic' : ''}
                                                 ${comparisonStatus === 'comparison-only' ? 'comparison-only' : ''}
+                                                ${comparisonStatus === 'main-only' ? 'main-only' : '' }
                                                 `}
                                                 onClick={() => handleFretClick(string.pos, fret)}
                                                 data-note={note}

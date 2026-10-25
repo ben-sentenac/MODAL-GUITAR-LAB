@@ -6,6 +6,8 @@
     --characteristic-fret-color:#a18beacc;
     --in-scale-color: #005e41;
     --in-scale-fret-color:#1d7258;
+    --comparison-scale-color:#67c7f0;
+    --comparison-scale-fret-color:#46b0dd;
 }
 
 .g-neck-container {
@@ -109,6 +111,14 @@
     background-color: var(--in-scale-color);
 }
 
+.main-only::after {
+    background-color: var(--characteristic-color);
+}
+
+.main-only {
+    background-color: var(--characteristic-fret-color);
+}
+
 .is-characteristic::after {
     background-color: var(--characteristic-color);
 }
@@ -117,12 +127,16 @@
     background-color: var(--tonic-color);
 }
 .comparison-only::after {
-    background-color: #67c7f0;
+    background-color: var(--comparison-scale-color);
 }
 
 .is-selected::after {
     z-index: 20;
     background-color: var(--selected-color);
+}
+
+.comparison-only {
+    background-color: var(--comparison-scale-fret-color);
 }
 
 .is-characteristic {
@@ -140,4 +154,26 @@
 
 .option-label {
     margin: 10px;
+}
+
+.fretboard-legend {
+    display:grid;
+    gap:5px;
+    grid-template-columns:1fr auto;
+    margin-bottom: 16px;
+}
+
+.legend-item {
+    display:flex;
+    gap:1rem;
+    align-items: center;
+    justify-content: start ;
+    margin-bottom:5px;
+}
+
+.legend-color {
+    width:25px;
+    height:25px;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
