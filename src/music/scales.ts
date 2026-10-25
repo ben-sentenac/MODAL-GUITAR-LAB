@@ -35,7 +35,10 @@ export type ScaleInterval = (typeof INTERVALS)[number];
 
 
 export const CHARACTERISTIC_INTERVALS:Partial<Record<ScaleName,number[]>> = {
-    "dorian":[9]
+    "dorian":[9],
+    "phrygian":[1],
+    "minor":[8,10],
+    "major":[4,11]
 }
 
 
