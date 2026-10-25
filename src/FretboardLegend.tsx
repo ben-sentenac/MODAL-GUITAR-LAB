@@ -28,8 +28,8 @@ export function FretBoardLegend({isComparing}:FretBoardLegendProps) {
         <div className="fretboard-legend">
            {
             legendItems.map((item) => (
-                <div className="legend-item">
-                    <div style={{backgroundColor:`var(${item.color})`}} className="legend-color"></div>
+                <div key={item?.label} className="legend-item">
+                    <div style={{backgroundColor:`var(${item?.color})`}} className="legend-color"></div>
                     <div className="legend-label">{item?.label}</div>
                 </div>
             ))

@@ -232,7 +232,6 @@ function GuitarNeck() {
                                         const note = isSelected || isInScale || comparisonStatus === 'comparison-only' ? label : "";
                                         const isTonic = midiNote % 12 === tonic % 12;
 
-                                        console.log(comparisonStatus);
                                         return (
                                             <div key={fret}
                                                 className={`fret-cell

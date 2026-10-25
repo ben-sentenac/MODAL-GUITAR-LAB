@@ -44,7 +44,7 @@ export const CHARACTERISTIC_INTERVALS:Partial<Record<ScaleName,number[]>> = {
     "dorian":[9],
     "phrygian":[1],
     "minor":[8,10],
-    "major":[4,11]
+    "major":[5,11]
 }
 
 

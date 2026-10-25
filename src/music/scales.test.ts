@@ -3,40 +3,40 @@ import { getScaleComparisonStatus, isCharacteristicInterval } from "./scales";
 
 
 describe('isCharacteristicInterval', () => {
-    it('find the major six of dorian mode', () => {
+    it('returns true for the major sixth in dorian mode', () => {
         expect(isCharacteristicInterval(40, 49, "dorian")).toBe(true);
     });
-    it('not find the major six of dorian mode', () => {
+    it('returns false for the minor sixth in dorian mode', () => {
         expect(isCharacteristicInterval(40, 48, "dorian")).toBe(false);
     });
-    it('must find the minor second in phrygian mode', () => {
+    it('returns true for the minor second in phrygian mode', () => {
         expect(isCharacteristicInterval(40, 41, "phrygian")).toBe(true);
     });
-    it('must find the minor 6 of the minor mode', () => {
+    it('returns true for the minor 6 in the minor mode', () => {
         expect(isCharacteristicInterval(40, 48, "minor")).toBe(true);
     });
-    it('must find the minor 6 of the minor mode', () => {
+    it('returns true for the minor seventh in the minor mode', () => {
         expect(isCharacteristicInterval(40, 50, "minor")).toBe(true);
     });
-    it('must find the 4 of the major mode', () => {
-        expect(isCharacteristicInterval(40, 44, "major")).toBe(true);
+    it('returns true for the fourth in the major mode', () => {
+        expect(isCharacteristicInterval(40, 45, "major")).toBe(true);
     })
-    it('must find the major 7 of the major mode', () => {
+    it('returns true for the major seventh in the major mode', () => {
         expect(isCharacteristicInterval(40, 51, "major")).toBe(true);
     })
 });
 
 describe("getScaleComparisonStatus", () => {
-    it("must return common", () => {
+    it("returns common for the tonic shared by minor and dorian", () => {
         expect(getScaleComparisonStatus(40, 52, "minor", "dorian")).toBe("common");
     });
-    it("must return primary-only", () => {
+    it("returns main-only when the note is only in the minor", () => {
         expect(getScaleComparisonStatus(40, 48, "minor", "dorian")).toBe("main-only");
     });
-    it("must return reference-only", () => {
+    it("returns comparison-only when the note not in minor but in the dorian", () => {
         expect(getScaleComparisonStatus(40, 49, "minor", "dorian")).toBe("comparison-only");
     });
-    it("must return outside", () => {
+    it("returns outside when the note is outside minor and dorian scale", () => {
         expect(getScaleComparisonStatus(40, 53, "minor", "dorian")).toBe("outside");
     });
 
