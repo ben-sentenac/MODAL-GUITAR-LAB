@@ -1,0 +1,139 @@
+:root {
+    --tonic-color: #df6464;
+    --tonic-fret-color:#df6464de;
+    --selected-color: #d99e36;
+    --characteristic-color: #a18bea;
+    --characteristic-fret-color:#a18beacc;
+    --in-scale-color: #005e41;
+    --in-scale-fret-color:#1d7258;
+}
+
+.g-neck-container {
+    background: #2e1c0c;
+    /* wood color */
+    padding: 20px;
+    color: #fff;
+    font-family: sans-serif;
+    border-radius: 4px;
+}
+
+.fretboard-headers {
+    display: grid;
+    grid-template-columns: 50px repeat(13, 1fr);
+    /* 50px pour l'alignement, puis 13 colonnes égales */
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.fretboard-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.string-row {
+    display: grid;
+    grid-template-columns: 50px repeat(13, 1fr);
+    height: 40px;
+    /* Hauteur de la case */
+    align-items: center;
+
+}
+
+.string-name {
+    font-weight: bold;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.fret-cell {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    /* Centre la corde verticalement dans la case */
+    border-right: 2px solid #ccc;
+}
+
+/* La frette 0 (sillet de tête) peut être plus épaisse si besoin */
+.string-name+.fret-cell {
+    border-left: 4px solid #aaa;
+}
+
+/* La corde physique qui passe au milieu de la case */
+.string-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, #eee, #999, #bbb);
+
+    /* Votre règle magique d'épaisseur progressive ! */
+    height: calc(1px + var(--i) * 0.6px);
+
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    /* Laisse la case cliquable */
+}
+
+
+
+.is-selected:after,
+.in-scale::after {
+    content: attr(data-note);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* Style visuel de la note */
+    width: 24px;
+    height: 24px;
+    /* Couleur flashy pour la note */
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+
+    /* Centrage du texte à l'intérieur du rond */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+
+}
+.in-scale {
+    background-color:var(--in-scale-fret-color);
+}
+.in-scale:after {
+    z-index: 1;
+    background-color: var(--in-scale-color);
+}
+
+.is-characteristic:after {
+    background-color: var(--characteristic-color);
+}
+
+.is-tonic:after {
+    background-color: var(--tonic-color);
+}
+
+.is-selected:after {
+    z-index: 20;
+    background-color: var(--selected-color);
+}
+
+.is-characteristic {
+    background-color:var(--characteristic-fret-color);
+}
+
+.is-tonic {
+    background-color:var(--tonic-fret-color);
+}
+
+.options-container {
+    display: flex;
+    gap: 16px;
+}
+
+.option-label {
+    margin: 10px;
+}
