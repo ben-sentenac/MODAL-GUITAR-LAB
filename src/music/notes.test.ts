@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { checkMidiRange, getFullNoteName, getMidiNote, getNoteName, getOctave } from "./notes";
+import { checkMidiRange, getFullNoteName, getMidiNote, getNoteName, getOctave, midiToFrequency } from "./notes";
 
 describe('checkMidiRange', () => {
     it('throws a RangeError if argument is not an integer between 0 and 127 inclusive', () => {
@@ -57,5 +57,28 @@ describe('getFullNoteName', () => {
 
     it('trhows when invalid midi range', () => {
         expect(() => getFullNoteName(128)).throw('MIDI note must be an integer between 0 and 127');
+    });
+});
+
+describe('midiToFrequency', () => {
+    const cases:[number,RangeErrorConstructor][] = [
+        [128,RangeError],
+        [-1,RangeError],
+        [NaN,RangeError],
+        [Infinity,RangeError],
+        [-Infinity,RangeError]
+    ]
+    it.each(cases)('throws RangeError for invalid MIDI values', (number,errorType) => {
+        expect(() => midiToFrequency(number)).toThrow(errorType);
+    });
+    it.each(
+        [
+            [40,82.41],
+            [57,220],
+            [69,440],
+            [81,880]
+        ]
+    )('must return the rigth frequency', (midi,freq) => {
+        expect(midiToFrequency(midi)).toBeCloseTo(freq);
     });
 });

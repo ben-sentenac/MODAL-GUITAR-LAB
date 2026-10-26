@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { getFullNoteName, getMidiNote } from "./music/notes";
+import { useEffect, useRef, useState } from "react";
+import { getFullNoteName, getMidiNote, midiToFrequency } from "./music/notes";
 import {
     CHROMATIC_SCALE,
     getIntervalLabel,
@@ -36,6 +36,26 @@ function buildOutput(selectedPosition: SelectedPosition, selected: GuitarString,
     return <span>{`NOTE: ${note} MIDI: ${midi} ${scaleStatus} SCALE: ${getTonicName(tonic)} ${scaleName}`}</span>
 }
 
+function playTestTone(audioContext: AudioContext, midi: number) {
+    const oscillator = audioContext.createOscillator();
+    oscillator.type = "sawtooth";
+    oscillator.frequency.setValueAtTime(midiToFrequency(midi), audioContext.currentTime);
+
+    const gain = audioContext.createGain();
+    gain.gain.value = 0.15;
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    const startTime = audioContext.currentTime;
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.3);
+    oscillator.addEventListener('ended', () => {
+        gain.disconnect();
+        oscillator.disconnect();
+    });
+}
+
 
 function GuitarNeck() {
 
@@ -44,6 +64,8 @@ function GuitarNeck() {
     const [scaleName, setScaleName] = useState<ScaleName>("minor");
     const [displayMode, setDisplayMode] = useState<"notes" | "intervals">("notes");
     const [comparisonScale, setComparisonScale] = useState<ScaleName | null>(null);
+
+    const audioCtxRef = useRef<AudioContext | null>(null);
 
     const guitarStrings: GuitarString[] = [
         {
@@ -75,6 +97,14 @@ function GuitarNeck() {
     const handleFretClick = (stringPos: GuitarString['pos'], fret: number) => {
         if (typeof fret !== 'number' || fret < 0) {
             return;
+        }
+        const string = guitarStrings.find((string) => string.pos === stringPos);
+        if (string) {
+            if (!audioCtxRef.current) {
+                audioCtxRef.current = new AudioContext();
+            }
+            const midi = getMidiNote(string.openMidi, fret);
+            playTestTone(audioCtxRef.current, midi);
         }
 
         setSelectedPosition({
@@ -118,19 +148,26 @@ function GuitarNeck() {
 
     const selected = guitarStrings.find((string) => string.pos === selectedPosition?.stringPos);
 
-
+    useEffect(() => {
+        return () => {
+            const audioContext = audioCtxRef.current;
+            if (audioContext) {
+                void audioContext.close().catch((err) => { console.error(err) });
+            }
+        }
+    }, [])
     return (
         <>
             <div className="options-container">
-               <FretboardControls
-               tonic={tonic}
-               onTonicChange={handleTonicChange}
-               scaleName={scaleName}
-               onScaleChange={handleScaleChange}
-               displayMode={displayMode}
-               onDisplayModeChange={handleDisplayModeChange}
-               comparisonScale={comparisonScale}
-               onComparisonScaleChange={handleComparisonScaleChange}
+                <FretboardControls
+                    tonic={tonic}
+                    onTonicChange={handleTonicChange}
+                    scaleName={scaleName}
+                    onScaleChange={handleScaleChange}
+                    displayMode={displayMode}
+                    onDisplayModeChange={handleDisplayModeChange}
+                    comparisonScale={comparisonScale}
+                    onComparisonScaleChange={handleComparisonScaleChange}
                 />
             </div>
             <div className="g-neck-container">
@@ -171,7 +208,7 @@ function GuitarNeck() {
                                                 ${isTonic ? 'is-tonic' : ''}
                                                 ${isCharacteristic && comparisonScale === null ? 'is-characteristic' : ''}
                                                 ${comparisonStatus === 'comparison-only' ? 'comparison-only' : ''}
-                                                ${comparisonStatus === 'main-only' ? 'main-only' : '' }
+                                                ${comparisonStatus === 'main-only' ? 'main-only' : ''}
                                                 `}
                                                 onClick={() => handleFretClick(string.pos, fret)}
                                                 data-note={note}

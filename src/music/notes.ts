@@ -38,3 +38,8 @@ export function getFullNoteName(midi:number):string {
 
     return `${note}${octave}`;
 }
+
+export function midiToFrequency(midi:number):number {
+    checkMidiRange(midi);
+   return  440 * 2 ** ((midi - 69)/12);
+}
