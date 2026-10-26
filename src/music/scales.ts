@@ -53,11 +53,14 @@ function modulo(value: number, mod: number) {
 }
 
 export function getTonicName(tonic:number): NoteName {
+    checkMidiRange(tonic);
     const tonicName = CHROMATIC_SCALE[modulo(tonic,12)];
     return tonicName ?? "C";
 }
 
 export function isNoteInScale(midiNote:number,tonic:number,scaleName:ScaleName):boolean {
+    checkMidiRange(midiNote);
+    checkMidiRange(tonic);
     const distance = modulo((midiNote - tonic),12);
     return SCALES[scaleName].some((value) => value === distance);
 }
