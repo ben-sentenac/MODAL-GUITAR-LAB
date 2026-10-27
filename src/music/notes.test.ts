@@ -61,24 +61,24 @@ describe('getFullNoteName', () => {
 });
 
 describe('midiToFrequency', () => {
-    const cases:[number,RangeErrorConstructor][] = [
-        [128,RangeError],
-        [-1,RangeError],
-        [NaN,RangeError],
-        [Infinity,RangeError],
-        [-Infinity,RangeError]
+    const cases: [number, RangeErrorConstructor][] = [
+        [128, RangeError],
+        [-1, RangeError],
+        [NaN, RangeError],
+        [Infinity, RangeError],
+        [-Infinity, RangeError]
     ]
-    it.each(cases)('throws RangeError for invalid MIDI values', (number,errorType) => {
+    it.each(cases)('throws RangeError for invalid MIDI values', (number, errorType) => {
         expect(() => midiToFrequency(number)).toThrow(errorType);
     });
     it.each(
         [
-            [40,82.41],
-            [57,220],
-            [69,440],
-            [81,880]
+            [40, 82.41],
+            [57, 220],
+            [69, 440],
+            [81, 880]
         ]
-    )('must return the rigth frequency', (midi,freq) => {
+    )('must return the rigth frequency', (midi, freq) => {
         expect(midiToFrequency(midi)).toBeCloseTo(freq);
     });
 });
