@@ -12,6 +12,7 @@ import {
 } from "./music/scales";
 import { FretboardControls } from "./FretboardControls";
 import { scheduleAttack, scheduleRelease } from "./music/audio";
+import { addSoloNote, getNextStartBeat } from "./music/solo";
 
 type GuitarString = {
     pos: 1 | 2 | 3 | 4 | 5 | 6;
@@ -22,6 +23,14 @@ type SelectedPosition = {
     stringPos: GuitarString['pos'];
     fret: number;
 }
+
+export type SoloNote = {
+    stringPos: GuitarString['pos'];
+    fret: number;
+    startBeat: number;
+    durationBeats: number;
+}
+
 
 function cellIsSelected(pos: number, fret: number, selectedPosition: SelectedPosition | null) {
     if (selectedPosition) {
@@ -47,13 +56,13 @@ function playTestTone(audioContext: AudioContext, midi: number) {
     const gain = audioContext.createGain();
 
     const gainParam = gain.gain;
-    scheduleAttack(gainParam,startTime);
+    scheduleAttack(gainParam, startTime);
 
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
 
     const stopTime = startTime + 1;
-    scheduleRelease(gainParam,stopTime);
+    scheduleRelease(gainParam, stopTime);
 
     oscillator.start(startTime);
 
@@ -72,6 +81,8 @@ function GuitarNeck() {
     const [scaleName, setScaleName] = useState<ScaleName>("minor");
     const [displayMode, setDisplayMode] = useState<"notes" | "intervals">("notes");
     const [comparisonScale, setComparisonScale] = useState<ScaleName | null>(null);
+
+    const [solo, setSolo] = useState<SoloNote[]>([]);
 
     const audioCtxRef = useRef<AudioContext | null>(null);
 
@@ -118,6 +129,17 @@ function GuitarNeck() {
         setSelectedPosition({
             stringPos, fret
         });
+
+        setSolo(previousSolo => {
+            const lastNote = getNextStartBeat(previousSolo);
+            const soloNote: SoloNote = {
+                stringPos,
+                fret,
+                startBeat:lastNote,
+                durationBeats: 1
+            }
+            return addSoloNote(previousSolo, soloNote);
+        });
     }
 
     const handleTonicChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
@@ -163,7 +185,9 @@ function GuitarNeck() {
                 void audioContext.close().catch((err) => { console.error(err) });
             }
         }
-    }, [])
+    }, []);
+
+
     return (
         <>
             <div className="options-container">
@@ -239,6 +263,11 @@ function GuitarNeck() {
             {
                 selectedPosition && selected ? buildOutput(selectedPosition, selected, tonic, scaleName) : <span>Aucune note séléctionée</span>
 
+            }
+            {
+                solo.length ? solo.map(note => (
+                    <div key={note.startBeat} >{`Corde${note.stringPos}, case${note.fret} Temps${note.startBeat} Durée${note.durationBeats}`}</div>
+                )) : <div>"Aucune note enregistrée"</div>
             }
         </>
     )
