@@ -11,6 +11,7 @@ import {
     getScaleComparisonStatus
 } from "./music/scales";
 import { FretboardControls } from "./FretboardControls";
+import { scheduleAttack, scheduleRelease } from "./music/audio";
 
 type GuitarString = {
     pos: 1 | 2 | 3 | 4 | 5 | 6;
@@ -41,15 +42,22 @@ function playTestTone(audioContext: AudioContext, midi: number) {
     oscillator.type = "sawtooth";
     oscillator.frequency.setValueAtTime(midiToFrequency(midi), audioContext.currentTime);
 
+    const startTime = audioContext.currentTime;
+
     const gain = audioContext.createGain();
-    gain.gain.value = 0.15;
+
+    const gainParam = gain.gain;
+    scheduleAttack(gainParam,startTime);
 
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
 
-    const startTime = audioContext.currentTime;
+    const stopTime = startTime + 1;
+    scheduleRelease(gainParam,stopTime);
+
     oscillator.start(startTime);
-    oscillator.stop(startTime + 0.3);
+
+    oscillator.stop(stopTime);
     oscillator.addEventListener('ended', () => {
         gain.disconnect();
         oscillator.disconnect();
