@@ -1,13 +1,13 @@
 :root {
     --tonic-color: #df6464;
-    --tonic-fret-color:#df6464de;
+    --tonic-fret-color: #df6464de;
     --selected-color: #d99e36;
     --characteristic-color: #a18bea;
-    --characteristic-fret-color:#a18beacc;
+    --characteristic-fret-color: #a18beacc;
     --in-scale-color: #005e41;
-    --in-scale-fret-color:#1d7258;
-    --comparison-scale-color:#67c7f0;
-    --comparison-scale-fret-color:#46b0dd;
+    --in-scale-fret-color: #1d7258;
+    --comparison-scale-color: #67c7f0;
+    --comparison-scale-fret-color: #46b0dd;
 }
 
 .g-neck-container {
@@ -103,9 +103,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 
 }
+
 .in-scale {
-    background-color:var(--in-scale-fret-color);
+    background-color: var(--in-scale-fret-color);
 }
+
 .in-scale::after {
     z-index: 1;
     background-color: var(--in-scale-color);
@@ -126,6 +128,7 @@
 .is-tonic::after {
     background-color: var(--tonic-color);
 }
+
 .comparison-only::after {
     background-color: var(--comparison-scale-color);
 }
@@ -140,11 +143,11 @@
 }
 
 .is-characteristic {
-    background-color:var(--characteristic-fret-color);
+    background-color: var(--characteristic-fret-color);
 }
 
 .is-tonic {
-    background-color:var(--tonic-fret-color);
+    background-color: var(--tonic-fret-color);
 }
 
 .options-container {
@@ -157,23 +160,51 @@
 }
 
 .fretboard-legend {
-    display:grid;
-    gap:5px;
-    grid-template-columns:1fr auto;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 1fr auto;
     margin-bottom: 16px;
 }
 
 .legend-item {
-    display:flex;
-    gap:1rem;
+    display: flex;
+    gap: 1rem;
     align-items: center;
-    justify-content: start ;
-    margin-bottom:5px;
+    justify-content: start;
+    margin-bottom: 5px;
 }
 
 .legend-color {
-    width:25px;
-    height:25px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     flex-shrink: 0;
+}
+
+.guitar-tab-container {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    font-family: monospace;
+}
+
+.guitar-tab-row {
+    display:flex;
+}
+
+.guitar-tab-notes {
+     display: flex;
+    background: linear-gradient(#777, #777) center / 100% 1px no-repeat;
+
+}
+
+.guitar-tab-col {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 1.5rem;
+    height: 1.8rem;
+}
+
+.guitar-tab-col span {
+    background-color: white;
 }

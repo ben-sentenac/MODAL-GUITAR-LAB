@@ -13,8 +13,9 @@ import {
 import { FretboardControls } from "./FretboardControls";
 import { scheduleAttack, scheduleRelease } from "./music/audio";
 import { addSoloNote, getNextStartBeat } from "./music/solo";
+import { GuitarTab } from "./GuitarTab";
 
-type GuitarString = {
+export type GuitarString = {
     pos: 1 | 2 | 3 | 4 | 5 | 6;
     openMidi: number;
 }
@@ -264,11 +265,7 @@ function GuitarNeck() {
                 selectedPosition && selected ? buildOutput(selectedPosition, selected, tonic, scaleName) : <span>Aucune note séléctionée</span>
 
             }
-            {
-                solo.length ? solo.map(note => (
-                    <div key={note.startBeat} >{`Corde${note.stringPos}, case${note.fret} Temps${note.startBeat} Durée${note.durationBeats}`}</div>
-                )) : <div>"Aucune note enregistrée"</div>
-            }
+            <GuitarTab solo={solo} />
         </>
     )
 
