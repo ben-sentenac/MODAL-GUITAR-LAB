@@ -188,17 +188,21 @@
 }
 
 .guitar-tab-row {
-    display:flex;
+    display: flex;
 }
 
 .guitar-tab-notes {
-     display: flex;
+    display: flex;
     background: linear-gradient(#777, #777) center / 100% 1px no-repeat;
 
 }
 
+.guitar-tab-label {
+    flex: 0 0 3ch;
+}
+
 .guitar-tab-col {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 1.5rem;
@@ -207,4 +211,16 @@
 
 .guitar-tab-col span {
     background-color: white;
+}
+
+.startbeat-row {
+    display: flex;
+}
+
+.startbeat-container {
+    display: flex;
+}
+
+.startbeat-cells {
+    display: flex;
 }
