@@ -26,3 +26,31 @@ export function computeTabCells(soloNote:SoloNote,nbStrings = 6):string[] {
 export function computeTabColumns(solo:SoloNote[],nbStrings = 6):string[][] {
     return solo.map(soloNote => computeTabCells(soloNote,nbStrings))
 }
+
+export function computeTimeGrid(totalBeats:number,stepBeats:number):number[] {
+    const exactSteps = totalBeats / stepBeats;
+    const stepsCount = Math.ceil(exactSteps);
+
+    const grid = Array.from({length:stepsCount + 1}, (_,i) => {
+        const value = i * stepBeats;
+
+        return Math.round(value * 1e6) / 1e6;
+    });
+
+    if(grid.length > 0) {
+        grid[grid.length -1] = totalBeats;
+    }
+
+    return grid;
+}
+
+export function getNotesAtBeat(solo:SoloNote[],beat:number):SoloNote[] {
+    return solo.filter((soloNote) => soloNote.startBeat === beat);
+}
+
+export function getSoloEndBeat(solo: SoloNote[]): number {
+    return solo.reduce((acc,curr) => {
+        const endBeat = curr.startBeat + curr.durationBeats;
+        return Math.max(acc,endBeat);
+    },0);
+}
