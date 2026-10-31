@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { addSoloNote, computeTabCells, computeTabColumns, getNextStartBeat, computeTimeGrid, getNotesAtBeat, getSoloEndBeat } from './solo';
+import {
+    addSoloNote,
+    computeTabCells,
+    computeTabColumns,
+    getNextStartBeat,
+    computeTimeGrid,
+    getNotesAtBeat,
+    getSoloEndBeat,
+    getNoteGridPlacement,
+    type GridPlacement
+} from './solo';
 import type { SoloNote } from '../GuitarNeck';
 
 describe('addSoloNote', () => {
@@ -102,8 +112,24 @@ describe('getSoloEndBeat', () => {
         expect(getSoloEndBeat(solo)).toBe(6);
     });
 
- it('returns 0 with empty solo', () => {
+    it('returns 0 with empty solo', () => {
         expect(getSoloEndBeat([])).toBe(0);
     });
 
+});
+
+describe('getNoteGridPlacement', () => {
+    it('returns the correct grid placement obj', () => {
+        const note: SoloNote = {
+            stringPos: 2,
+            fret: 5,
+            startBeat: 2,
+            durationBeats: 3
+        };
+        const gridPlacementResult:GridPlacement = {
+            columnStart: 3,
+            columnSpan: 3
+        };
+        expect(getNoteGridPlacement(note)).toEqual(gridPlacementResult);
+    });
 });

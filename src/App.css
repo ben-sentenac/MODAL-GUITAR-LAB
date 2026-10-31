@@ -192,7 +192,7 @@
 }
 
 .guitar-tab-notes {
-    display: flex;
+    display: grid;
     background: linear-gradient(#777, #777) center / 100% 1px no-repeat;
 
 }
@@ -207,6 +207,14 @@
     justify-content: center;
     flex: 0 0 1.5rem;
     height: 1.8rem;
+}
+
+.guitar-tab-notes .guitar-tab-col {
+    background-color: #46b0dd;
+    border-radius: 5px;
+    padding: 0.2rem;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .guitar-tab-col span {

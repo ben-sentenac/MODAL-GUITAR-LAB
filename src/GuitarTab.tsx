@@ -1,5 +1,5 @@
 import type { SoloNote } from "./GuitarNeck";
-import { computeTimeGrid, getNotesAtBeat, getSoloEndBeat } from "./music/solo";
+import { computeTimeGrid, getNoteGridPlacement, getSoloEndBeat } from "./music/solo";
 
 type GuitarTabProps = {
     solo: SoloNote[]
@@ -9,7 +9,7 @@ export function GuitarTab({ solo }: GuitarTabProps) {
     const stringLabels = ["e", "B", "G", "D", "A", "E"];
     const canDisplayTab = solo.length > 0;
 
-    const totalBeats = Math.max(4,getSoloEndBeat(solo));
+    const totalBeats = Math.max(4, getSoloEndBeat(solo));
 
     const timeGridCells = computeTimeGrid(totalBeats, 1);
     const gridStartCells = timeGridCells.slice(0, -1);
@@ -29,22 +29,29 @@ export function GuitarTab({ solo }: GuitarTabProps) {
                 Array.from({ length: 6 }, (_, i) =>
                     <div className="guitar-tab-row" key={i}>
                         <span className="guitar-tab-label">{stringLabels[i]} |</span>
-                        <div className="guitar-tab-notes" style={{width:`${gridStartCells.length * 1.5}rem`}}>
+                        <div className="guitar-tab-notes" style={
                             {
-                                gridStartCells.map((startBeat) => {
-                                    const note = getNotesAtBeat(solo,startBeat)
-                                    .find((note) => note.stringPos === i + 1);
-                                    return (
-                                        <span className="guitar-tab-col" key={startBeat}>
-                                            { note?.fret }
-                                        </span>
-                                    );
-                                }
-                                )}
+                                width: `${gridStartCells.length * 1.5}rem`,
+                                gridTemplateColumns: `repeat(${gridStartCells.length},1.5rem)`
+                            }}>
+                            {
+                                solo.filter((note) => note.stringPos === i + 1)
+                                    .map((note) => {
+                                        const placement = getNoteGridPlacement(note);
+                                        return (
+                                        <span
+                                        key={note.startBeat}
+                                        style={
+                                            { gridColumn: `${placement.columnStart}/ span ${placement.columnSpan}` }
+                                        }
+                                        className="guitar-tab-col">{note?.fret}</span>
+                                    )
+                                })
+                            }
                         </div>
+                    </div>
 
-                    </div>)
-            }
+            )}
             {
                 !canDisplayTab && <div>Aucune note enregistrée</div>
             }

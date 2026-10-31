@@ -54,3 +54,15 @@ export function getSoloEndBeat(solo: SoloNote[]): number {
         return Math.max(acc,endBeat);
     },0);
 }
+
+export type GridPlacement = {
+    columnStart: number,
+    columnSpan: number
+}
+
+export function getNoteGridPlacement(note:SoloNote): GridPlacement {
+    return {
+        columnStart:note.startBeat + 1,
+        columnSpan:note.durationBeats
+    }
+}
