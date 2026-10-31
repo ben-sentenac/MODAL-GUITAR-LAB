@@ -9,9 +9,11 @@ export function GuitarTab({ solo }: GuitarTabProps) {
     const stringLabels = ["e", "B", "G", "D", "A", "E"];
     const canDisplayTab = solo.length > 0;
 
+    const stepBeats = 0.5;
+
     const totalBeats = Math.max(4, getSoloEndBeat(solo));
 
-    const timeGridCells = computeTimeGrid(totalBeats, 1);
+    const timeGridCells = computeTimeGrid(totalBeats, stepBeats);
     const gridStartCells = timeGridCells.slice(0, -1);
     return (
         <div className="guitar-tab-container">
@@ -37,7 +39,7 @@ export function GuitarTab({ solo }: GuitarTabProps) {
                             {
                                 solo.filter((note) => note.stringPos === i + 1)
                                     .map((note) => {
-                                        const placement = getNoteGridPlacement(note);
+                                        const placement = getNoteGridPlacement(note,stepBeats);
                                         return (
                                         <span
                                         key={note.startBeat}

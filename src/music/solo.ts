@@ -60,9 +60,11 @@ export type GridPlacement = {
     columnSpan: number
 }
 
-export function getNoteGridPlacement(note:SoloNote): GridPlacement {
+export function getNoteGridPlacement(note:SoloNote,stepBeats:number = 1): GridPlacement {
+    const gridOffset = 1;
+    const subdivisionBeat = note.startBeat / stepBeats;
     return {
-        columnStart:note.startBeat + 1,
-        columnSpan:note.durationBeats
+        columnStart:subdivisionBeat + gridOffset,
+        columnSpan:note.durationBeats / stepBeats
     }
 }

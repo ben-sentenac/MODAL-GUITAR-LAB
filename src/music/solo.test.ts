@@ -126,10 +126,24 @@ describe('getNoteGridPlacement', () => {
             startBeat: 2,
             durationBeats: 3
         };
-        const gridPlacementResult:GridPlacement = {
+        const gridPlacementResult: GridPlacement = {
             columnStart: 3,
             columnSpan: 3
         };
         expect(getNoteGridPlacement(note)).toEqual(gridPlacementResult);
+    });
+    it('it returns the rigth position and the right length given 0.5 beat / col', () => {
+        const note: SoloNote = {
+            stringPos: 2,
+            fret: 5,
+            startBeat: 0.5,
+            durationBeats: 1.5
+        };
+        const gridPlacementResult:GridPlacement = {
+            columnStart:2,
+            columnSpan:3
+        };
+
+        expect(getNoteGridPlacement(note,0.5)).toEqual(gridPlacementResult);
     });
 });
