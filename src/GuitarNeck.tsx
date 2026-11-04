@@ -40,11 +40,22 @@ function cellIsSelected(pos: number, fret: number, selectedPosition: SelectedPos
     return false;
 }
 
-function buildOutput(selectedPosition: SelectedPosition, selected: GuitarString, tonic: number, scaleName: ScaleName) {
-    const midi = getMidiNote(selected.openMidi, selectedPosition.fret);
-    const note = getFullNoteName(midi);
-    const scaleStatus = isNoteInScale(midi, tonic, scaleName) ? 'Dans la gamme' : 'Hors gamme'
-    return <span>{`NOTE: ${note} MIDI: ${midi} ${scaleStatus} SCALE: ${getTonicName(tonic)} ${scaleName}`}</span>
+function buildOutput(selectedPosition: SelectedPosition | null, selected: GuitarString | undefined, tonic: number, scaleName: ScaleName) {
+    if (selectedPosition && selected) {
+        const midi = getMidiNote(selected.openMidi, selectedPosition.fret);
+        const note = getFullNoteName(midi);
+        const scaleStatus = isNoteInScale(midi, tonic, scaleName) ? 'Dans la gamme' : 'Hors gamme'
+        return (<div className="selected-note-output-legend">
+            {
+                `NOTE: ${note} MIDI: ${midi} ${scaleStatus}
+            SCALE: ${getTonicName(tonic)} ${scaleName}`
+            }
+        </div>);
+    }
+    return (
+        <div className="selected-note-output-legend">
+            Aucune note séléctionée
+        </div>)
 }
 
 function playTestTone(audioContext: AudioContext, midi: number) {
@@ -151,9 +162,17 @@ function GuitarNeck() {
     const handleInsertionDurationChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
         const noteDuration = Number(target.value);
         if (
-        !validInsertionDuration.some(duration => duration === noteDuration)
+            !validInsertionDuration.some(duration => duration === noteDuration)
         ) return;
         setInsertionDuration(noteDuration);
+    }
+
+    const handleTabNoteSelect = (note: SoloNote) => {
+        const { fret, stringPos } = note;
+        setSelectedPosition({
+            fret,
+            stringPos
+        });
     }
 
     const handleTonicChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
@@ -275,27 +294,30 @@ function GuitarNeck() {
                 </div>
             </div>
             {
-                selectedPosition && selected ? buildOutput(selectedPosition, selected, tonic, scaleName) : <span>Aucune note séléctionée</span>
+                buildOutput(selectedPosition, selected, tonic, scaleName)
 
             }
-            <div className="insertion-duration-container">
-                <label htmlFor="insertion-duration-select">
-                    Durée d'insertion
-                </label>
-                <select
-                    name="insertion-duration"
-                    id="insertion-duration-select"
-                    value={insertionDuration}
-                    onChange={handleInsertionDurationChange}
-                >
-                    {
-                        validInsertionDuration.map(duration => (
-                            <option key={duration} value={duration}>{duration}</option>
-                        ))
-                    }
-                </select>
+            <div className="options-container">
+                <div className="insertion-duration-container">
+                    <label className="option-label" htmlFor="insertion-duration-select">
+                        Durée d'insertion
+                    </label>
+                    <select
+                        name="insertion-duration"
+                        id="insertion-duration-select"
+                        value={insertionDuration}
+                        onChange={handleInsertionDurationChange}
+                    >
+                        {
+                            validInsertionDuration.map(duration => (
+                                <option key={duration} value={duration}>{duration}</option>
+                            ))
+                        }
+                    </select>
+                </div>
             </div>
-            <GuitarTab solo={solo} />
+
+            <GuitarTab solo={solo} onNoteSelect={handleTabNoteSelect} />
         </>
     )
 

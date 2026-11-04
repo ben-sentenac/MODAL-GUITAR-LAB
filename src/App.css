@@ -10,13 +10,29 @@
     --comparison-scale-fret-color: #46b0dd;
 }
 
+html,
+body {
+    background: #142233;
+    color: #f1f5f9;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .g-neck-container {
-    background: #2e1c0c;
-    /* wood color */
-    padding: 20px;
-    color: #fff;
+    margin-top: 1rem;
+    padding: 1.5rem;
+
+    background: #142233;
+    color: #f1f5f9;
+
+    border: 1px solid #304158;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
     font-family: sans-serif;
-    border-radius: 4px;
+    overflow-x: auto;
 }
 
 .fretboard-headers {
@@ -24,13 +40,29 @@
     grid-template-columns: 50px repeat(13, 1fr);
     /* 50px pour l'alignement, puis 13 colonnes égales */
     text-align: center;
-    margin-bottom: 10px;
-    font-weight: bold;
+
+    margin-bottom: 0.75rem;
+
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #94a3b8;
 }
 
 .fretboard-grid {
     display: flex;
     flex-direction: column;
+
+    background: linear-gradient(180deg,
+            #3b271b 0%,
+            #24170f 50%,
+            #352217 100%);
+
+    border: 1px solid #584333;
+    border-radius: 8px;
+
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45);
+
+    overflow: hidden;
 }
 
 .string-row {
@@ -150,9 +182,81 @@
     background-color: var(--tonic-fret-color);
 }
 
+.selected-note-output-legend {
+    margin: 1rem 0;
+    border: 1px solid #304158;
+    padding: 1.5rem;
+    color: #d99e36;
+}
+
 .options-container {
-    display: flex;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(130px, 1fr)) minmax(240px, 1.5fr);
+    align-items: start;
+    gap: 1rem;
+
+    padding: 1.5rem;
+    border: 1px solid #304158;
+
+    background-color: #142233;
+    color: #eef2f8;
+}
+
+.options-container .option-label {
+    display: block;
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.options-container select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem 1rem;
+
+    background-color: #23354a;
+    color: #f1f5f9;
+
+    border: 1px solid #3b5069;
+    border-radius: 9px;
+
+    font: inherit;
+    cursor: pointer;
+
+    transition: border-color 150ms ease,
+        background-color 150ms ease;
+}
+
+.options-container select:hover {
+    background-color: #2c4057;
+    border-color: #64809e;
+}
+
+.options-container select:focus-visible {
+    outline: 2px solid #d99e36;
+    outline-offset: 3px;
+}
+
+.options-container .insertion-duration-container {
+    grid-column: 1 / -1;
+    max-width: 240px;
+}
+
+@media (max-width: 1100px) {
+    .options-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fretboard-legend {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .options-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 .option-label {
@@ -161,30 +265,71 @@
 
 .fretboard-legend {
     display: grid;
-    gap: 5px;
-    grid-template-columns: 1fr auto;
-    margin-bottom: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 0.65rem;
+
+    padding: 1rem;
+    margin-bottom: 0;
+
+    background-color: #1b2c40;
+    border: 1px solid #31465f;
+    border-radius: 10px;
+}
+
+.legend-title {
+    grid-column: 1 / -1;
+    margin: 0 0 0.35rem;
+
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
 }
 
 .legend-item {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    justify-content: start;
-    margin-bottom: 5px;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0;
 }
 
 .legend-color {
-    width: 25px;
-    height: 25px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     flex-shrink: 0;
 }
 
+.legend-label {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #cbd5e1;
+}
+
 .guitar-tab-container {
-    margin-top: 1.5rem;
-    padding: 1rem;
+    margin-top: 1rem;
+    padding: 1.5rem;
+
+    background-color: #142233;
+    color: #f1f5f9;
+
+    border: 1px solid #304158;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
     font-family: monospace;
+    overflow-x: auto;
+}
+
+.guitar-tab-title {
+    margin: 0 0 1.5rem;
+
+    font-family: sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    color: #f1f5f9;
 }
 
 .guitar-tab-row {
@@ -215,10 +360,21 @@
     padding: 0.2rem;
     box-sizing: border-box;
     min-width: 0;
+    font: inherit;
+    border: none;
+    cursor: pointer;
+    transition: transform 100ms ease, box-shadow 100ms ease;
+    box-shadow: 0 3px 0 #247b9f;
 }
 
-.guitar-tab-col span {
-    background-color: white;
+.guitar-tab-notes .guitar-tab-col:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #247b9f;
+}
+
+.guitar-tab-notes .guitar-tab-col:focus-visible {
+    outline: 2px solid #d99e36;
+    outline-offset: 3px;
 }
 
 .startbeat-row {
@@ -231,4 +387,9 @@
 
 .startbeat-cells {
     display: flex;
+}
+
+.startbeat-cells .guitar-tab-col {
+    color: #94a3b8;
+    font-size: 0.75rem;
 }

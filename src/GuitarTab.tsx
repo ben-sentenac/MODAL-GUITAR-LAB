@@ -2,10 +2,11 @@ import type { SoloNote } from "./GuitarNeck";
 import { computeTimeGrid, getNoteGridPlacement, getSoloEndBeat } from "./music/solo";
 
 type GuitarTabProps = {
-    solo: SoloNote[]
+    solo: SoloNote[];
+    onNoteSelect: (note: SoloNote) => void;
 }
 
-export function GuitarTab({ solo }: GuitarTabProps) {
+export function GuitarTab({ solo, onNoteSelect }: GuitarTabProps) {
     const stringLabels = ["e", "B", "G", "D", "A", "E"];
     const canDisplayTab = solo.length > 0;
 
@@ -17,6 +18,7 @@ export function GuitarTab({ solo }: GuitarTabProps) {
     const gridStartCells = timeGridCells.slice(0, -1);
     return (
         <div className="guitar-tab-container">
+            <h2 className="guitar-tab-title">Tablature</h2>
             <div className="startbeat-container">
                 <div className="guitar-tab-row">
                     <span className="guitar-tab-label"></span>
@@ -39,21 +41,24 @@ export function GuitarTab({ solo }: GuitarTabProps) {
                             {
                                 solo.filter((note) => note.stringPos === i + 1)
                                     .map((note) => {
-                                        const placement = getNoteGridPlacement(note,stepBeats);
+                                        const placement = getNoteGridPlacement(note, stepBeats);
                                         return (
-                                        <span
-                                        key={note.startBeat}
-                                        style={
-                                            { gridColumn: `${placement.columnStart}/ span ${placement.columnSpan}` }
-                                        }
-                                        className="guitar-tab-col">{note?.fret}</span>
-                                    )
-                                })
+                                            <button
+                                                type="button"
+                                                onClick={() => onNoteSelect(note)}
+                                                key={note.startBeat}
+                                                style={
+                                                    { gridColumn: `${placement.columnStart}/ span ${placement.columnSpan}` }
+                                                }
+                                                aria-label={`Corde ${note.stringPos}, case ${note.fret}, temps ${note.startBeat}`}
+                                                className="guitar-tab-col">{note?.fret}</button>
+                                        )
+                                    })
                             }
                         </div>
                     </div>
 
-            )}
+                )}
             {
                 !canDisplayTab && <div>Aucune note enregistrée</div>
             }
