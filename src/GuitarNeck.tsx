@@ -82,10 +82,15 @@ function GuitarNeck() {
     const [scaleName, setScaleName] = useState<ScaleName>("minor");
     const [displayMode, setDisplayMode] = useState<"notes" | "intervals">("notes");
     const [comparisonScale, setComparisonScale] = useState<ScaleName | null>(null);
+    const [insertionDuration, setInsertionDuration] = useState<number>(1);
 
     const [solo, setSolo] = useState<SoloNote[]>([]);
 
     const audioCtxRef = useRef<AudioContext | null>(null);
+
+    const validInsertionDuration = [
+        0.5, 1, 2
+    ] as const;
 
     const guitarStrings: GuitarString[] = [
         {
@@ -136,11 +141,19 @@ function GuitarNeck() {
             const soloNote: SoloNote = {
                 stringPos,
                 fret,
-                startBeat:lastNote,
-                durationBeats: 1
-            }
+                startBeat: lastNote,
+                durationBeats: insertionDuration
+            };
             return addSoloNote(previousSolo, soloNote);
         });
+    }
+
+    const handleInsertionDurationChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
+        const noteDuration = Number(target.value);
+        if (
+        !validInsertionDuration.some(duration => duration === noteDuration)
+        ) return;
+        setInsertionDuration(noteDuration);
     }
 
     const handleTonicChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
@@ -265,6 +278,23 @@ function GuitarNeck() {
                 selectedPosition && selected ? buildOutput(selectedPosition, selected, tonic, scaleName) : <span>Aucune note séléctionée</span>
 
             }
+            <div className="insertion-duration-container">
+                <label htmlFor="insertion-duration-select">
+                    Durée d'insertion
+                </label>
+                <select
+                    name="insertion-duration"
+                    id="insertion-duration-select"
+                    value={insertionDuration}
+                    onChange={handleInsertionDurationChange}
+                >
+                    {
+                        validInsertionDuration.map(duration => (
+                            <option key={duration} value={duration}>{duration}</option>
+                        ))
+                    }
+                </select>
+            </div>
             <GuitarTab solo={solo} />
         </>
     )
