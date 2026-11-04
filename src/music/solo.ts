@@ -6,6 +6,12 @@ export function addSoloNote(solo:SoloNote[],note:SoloNote):SoloNote[] {
     return updatedSolo;
 }
 
+export function removeLastSoloNote(solo:SoloNote[]):SoloNote[] {
+    const upadatedSolo = [...solo];
+    upadatedSolo.pop();
+    return upadatedSolo;
+}
+
 export function getNextStartBeat(solo: SoloNote[]):number {
     const lastNote = solo.at(-1);
     return lastNote ? lastNote.startBeat + lastNote.durationBeats : 0;

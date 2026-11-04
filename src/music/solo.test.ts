@@ -8,7 +8,8 @@ import {
     getNotesAtBeat,
     getSoloEndBeat,
     getNoteGridPlacement,
-    type GridPlacement
+    type GridPlacement,
+    removeLastSoloNote
 } from './solo';
 import type { SoloNote } from '../GuitarNeck';
 
@@ -146,4 +147,30 @@ describe('getNoteGridPlacement', () => {
 
         expect(getNoteGridPlacement(note,0.5)).toEqual(gridPlacementResult);
     });
+});
+
+describe("removeLastSoloNote", () => {
+
+    it("returns array with the last note removed without modfy the original array", () => {
+        const solo: SoloNote[] = [
+            { stringPos: 1, fret: 0, startBeat: 0, durationBeats: 1 },
+            { stringPos: 2, fret: 3, startBeat: 2, durationBeats: 4 },
+            { stringPos: 3, fret: 5, startBeat: 4, durationBeats: 1 }
+        ];
+        const expectedSolo = [
+            { stringPos: 1, fret: 0, startBeat: 0, durationBeats: 1 },
+            { stringPos: 2, fret: 3, startBeat: 2, durationBeats: 4 }
+        ]
+
+        const result = removeLastSoloNote(solo);
+        expect(result).toEqual(expectedSolo);
+        expect(result).toHaveLength(2);
+        expect(result).not.toBe(solo);
+        expect(solo).toHaveLength(3)
+    });
+
+    it('retuurns an empty array if solo is empty', () => {
+        expect(removeLastSoloNote([])).toEqual([]);
+    });
+
 });

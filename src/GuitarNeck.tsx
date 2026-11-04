@@ -12,7 +12,7 @@ import {
 } from "./music/scales";
 import { FretboardControls } from "./FretboardControls";
 import { scheduleAttack, scheduleRelease } from "./music/audio";
-import { addSoloNote, getNextStartBeat } from "./music/solo";
+import { addSoloNote, removeLastSoloNote, getNextStartBeat } from "./music/solo";
 import { GuitarTab } from "./GuitarTab";
 
 export type GuitarString = {
@@ -156,6 +156,12 @@ function GuitarNeck() {
                 durationBeats: insertionDuration
             };
             return addSoloNote(previousSolo, soloNote);
+        });
+    }
+
+    const handleRemoveLastSoloNote = () => {
+        setSolo(previousSolo => {
+            return removeLastSoloNote(previousSolo);
         });
     }
 
@@ -314,6 +320,15 @@ function GuitarNeck() {
                             ))
                         }
                     </select>
+                </div>
+                <div className="remove-last-note">
+                    <button
+                        type="button"
+                        onClick={handleRemoveLastSoloNote}
+                        disabled={solo.length === 0}
+                    >
+                        Annuler la dernière note
+                    </button>
                 </div>
             </div>
 
